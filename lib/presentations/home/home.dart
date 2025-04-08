@@ -1,7 +1,10 @@
 import 'package:fideos_mobile_app/controllers/base_screen.controller.dart';
+import 'package:fideos_mobile_app/controllers/restaurant.controller.dart';
 import 'package:fideos_mobile_app/models/color.model.dart';
+import 'package:fideos_mobile_app/models/restaurant.model.dart';
 import 'package:fideos_mobile_app/presentations/cart/cart_flash.dart';
 import 'package:fideos_mobile_app/presentations/restaurant/restaurant.detail.dart';
+import 'package:fideos_mobile_app/utils/loader.dart';
 import 'package:fideos_mobile_app/utils/seperator.dart';
 import 'package:fideos_mobile_app/utils/spacer.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Import controller
   final _baseScreenController = Get.put(BaseScreenController());
+
+  final _restaurantController =  Get.put(RestaurantController());
+  @override
+  void initState() {
+    super.initState();
+    _restaurantController.restaurants.refresh();
+    _restaurantController.allRestaurants();
+    
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -75,7 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
        Space.show(height: 10),
     
        // Restaurant tile
-       const RestaurantTile(),
+      // Obx(() => _restaurantController.restaurantLoading.value ? Loader().show() : Column(children: [
+      
+      // ],)),
+
+        ...List.generate(_restaurantController.restaurants.length, 
+        (index) => Text('jjhdjh')),
     
        // Adding some space 
        Space.show(height: 10),
@@ -257,71 +274,69 @@ class TopImage extends StatelessWidget {
 
 // Restaurant Tile
 class RestaurantTile extends StatelessWidget {
-  const RestaurantTile({super.key});
+   RestaurantTile({super.key,  required this.restaurant});
 
+  Restaurant restaurant;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Get.to(() => const RestaurantDetail());
-      },
-      child: Container(
-          width: Get.width,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: AppColor.black.withOpacity(0.2))),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Image Container
-              Container(
-                height: 150,
-                width: Get.width,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(5),   topRight: Radius.circular(5)),
-                    image: DecorationImage(image: AssetImage('assets/delicious-pizza.png'), fit: BoxFit.cover)),
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Align(alignment: Alignment.topRight, child: Icon(Feather.heart, color: AppColor.white.withOpacity(0.7))),
-                ),
-              ),
-      
-              // Restaurant detail
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Dominos Pizza', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-                        Text('Pizza, Burger, Pasta and more', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
-                        Text('25 mins from your location', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
-                        Text('Saltlake Sector 3, Bidhannagar, Kolkata', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
-                      ],
-                    ),
-      
-                    // Rating Button
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: AppColor.green, borderRadius: BorderRadius.circular(5)),
-                      child: const Row(
-                        children: [
-                          // Star icon
-                          Icon(Icons.star, color: Colors.white,size: 20),
-                          // Rating 
-                          Text(' 4.7+', style: TextStyle(color: Colors.white),),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          )),
-    );
+    return Text(restaurant.name.toString());
+    // Container(
+    //     width: Get.width,
+    //     decoration: BoxDecoration(
+    //         borderRadius: BorderRadius.circular(5),
+    //         border: Border.all(color: AppColor.black.withOpacity(0.2))),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         // Image Container
+    //         Container(
+    //           height: 150,
+    //           width: Get.width,
+    //           decoration: const BoxDecoration(
+    //               borderRadius: BorderRadius.only(topLeft: Radius.circular(5),   topRight: Radius.circular(5)),
+    //               image: DecorationImage(image: AssetImage('assets/delicious-pizza.png'), fit: BoxFit.cover)),
+    //           child: Padding(
+    //             padding: const EdgeInsets.all(4),
+    //             child: Align(alignment: Alignment.topRight, child: Icon(Feather.heart, color: AppColor.white.withOpacity(0.7))),
+    //           ),
+    //         ),
+    
+    //         // Restaurant detail
+    //         Padding(
+    //           padding: const EdgeInsets.all(8.0),
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: [
+    //                Column(
+    //                 crossAxisAlignment: CrossAxisAlignment.start,
+    //                 children: [
+    //                   const Text('Dominos Pizza', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
+    //                   Text('Pizza, Burger, Pasta and more', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
+    //                   Text('25 mins from your location', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
+    //                   Text('Saltlake Sector 3, Bidhannagar, Kolkata', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
+    //                 ],
+    //               ),
+    
+    //               // Rating Button
+    //               Container(
+    //                 padding: const EdgeInsets.all(5),
+    //                 decoration: BoxDecoration(
+    //                     color: AppColor.green, borderRadius: BorderRadius.circular(5)),
+    //                 child: const Row(
+    //                   children: [
+    //                     // Star icon
+    //                     Icon(Icons.star, color: Colors.white,size: 20),
+    //                     // Rating 
+    //                     Text(' 4.7+', style: TextStyle(color: Colors.white),),
+    //                   ],
+    //                 ),
+    //               )
+    //             ],
+    //           ),
+    //         )
+    //       ],
+    //     ),
+    // );
   }
 }

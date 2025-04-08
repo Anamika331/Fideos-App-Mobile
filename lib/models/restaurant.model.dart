@@ -98,6 +98,7 @@ class Restaurant {
 
       // parse this list of foods from map to restaurant and return
       return {
+      
         "success": restaurants
             .map((restaurant) => Restaurant.fromJson(restaurant))
             .toList()
