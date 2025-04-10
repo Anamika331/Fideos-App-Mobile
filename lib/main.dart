@@ -1,5 +1,6 @@
 import 'package:fideos_mobile_app/models/color.model.dart';
 import 'package:fideos_mobile_app/presentations/address/address.dart';
+import 'package:fideos_mobile_app/presentations/address/edit_address.dart';
 import 'package:fideos_mobile_app/presentations/auth/login.dart';
 import 'package:fideos_mobile_app/presentations/auth/register.dart';
 import 'package:fideos_mobile_app/presentations/base_screen/dashboard.dart';
@@ -28,6 +29,6 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
             fontFamily: "Lexend",
             primaryColor: AppColor.primary),
-        home: const AddressScreen());
+        home: const DashboardScreen());
   }
 }

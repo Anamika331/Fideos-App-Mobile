@@ -23,13 +23,16 @@ class _HomeScreenState extends State<HomeScreen> {
   final _baseScreenController = Get.put(BaseScreenController());
 
   final _restaurantController =  Get.put(RestaurantController());
+
   @override
   void initState() {
     super.initState();
+
     _restaurantController.restaurants.refresh();
     _restaurantController.allRestaurants();
     
   }
+
   @override
   Widget build(BuildContext context) {
 
@@ -87,12 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
        Space.show(height: 10),
     
        // Restaurant tile
-      // Obx(() => _restaurantController.restaurantLoading.value ? Loader().show() : Column(children: [
-      
-      // ],)),
-
-        ...List.generate(_restaurantController.restaurants.length, 
+      Obx(() => _restaurantController.restaurantLoading.value ? Loader().show() : Column(children: [
+       ...List.generate(_restaurantController.restaurants.length, 
         (index) => Text('jjhdjh')),
+      ],)),
+
+        // ...List.generate(_restaurantController.restaurants.length, 
+        // (index) => Text('jjhdjh')),
     
        // Adding some space 
        Space.show(height: 10),

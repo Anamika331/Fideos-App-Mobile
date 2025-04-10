@@ -1,5 +1,7 @@
+import 'package:fideos_mobile_app/controllers/address.controller.dart';
 import 'package:fideos_mobile_app/models/color.model.dart';
 import 'package:fideos_mobile_app/utils/appbar.dart';
+import 'package:fideos_mobile_app/utils/outline_button.dart';
 import 'package:fideos_mobile_app/utils/seperator.dart';
 import 'package:fideos_mobile_app/utils/spacer.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +16,12 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
+final _addressController = Get.put(AddressController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: bottomAppBar,
       appBar: PreferredSize(preferredSize: Size(Get.width, 50), child: appbar),
       body: SingleChildScrollView(
         child: Padding(
@@ -45,7 +50,7 @@ class _AddressScreenState extends State<AddressScreen> {
               Space.show(height: 10),
 
               // Current location
-              currentLocation,
+              const CommonOutlineButton(text: 'Current Loaction'),
 
               // Adding some space 
               Space.show(height: 20),
@@ -53,6 +58,17 @@ class _AddressScreenState extends State<AddressScreen> {
               // Seperator
               Seperator(text: 'Saved Addresses', horizontalPadding: 0).show(),
 
+              // Adding some space 
+              Space.show(height: 10),
+
+              // Address
+              addresses,
+
+              // Adding some space
+              Space.show(height: 20),
+
+              // Add address button  
+              const CommonOutlineButton(text: 'Add Address')
             ],
           ),
         ),
@@ -67,17 +83,65 @@ class _AddressScreenState extends State<AddressScreen> {
         actions: Space.show(),
 );
 
-  // Current loaction
-  Widget get currentLocation => Container(
-    width: Get.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: AppColor.primary, width: 2)
-      ),
-      child:
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Center(child: Text("Current Location", style: TextStyle(color: AppColor.primary, fontWeight: FontWeight.w600))),
+ 
+
+  // Address list 
+  Widget get addresses => Column(children: [
+    ...List.generate(2, (index) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: InkWell(
+        onTap: () {
+          _addressController.selectedAddress.value = index;
+
+        },
+        child: Obx(() => Container(
+        width: Get.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(
+              color: _addressController.selectedAddress.value == index ? AppColor.primary  : AppColor.black.withOpacity(0.09),
+              width: _addressController.selectedAddress.value == index ? 2 : 1
+              )
           ),
+          child:  Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  // Name
+                  const Text('Anamika Jha', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+
+                  // Phone number
+                  const Text('+918697604919', style: TextStyle(fontWeight: FontWeight.w500)),
+
+                  // Address
+                  Text('DN-24, Saltlake, Sector 5, Kolkata, India', style: TextStyle(color: AppColor.black.withOpacity(0.3)),),
+
+                  Text('Matrix Tower, 10th Floor', style: TextStyle(color: AppColor.black.withOpacity(0.3)),),
+
+                  Text('West Bengal, Kolkata, 700009', style: TextStyle(color: AppColor.black.withOpacity(0.3)),)
+                ],),
+
+                // Edit icon
+                const Image(image: AssetImage('assets/address_edit.png'), height: 20,)
+              ],
+            ),
+          ),
+        )),
+      ),
+    ))
+  ],
 );
+
+  // Bottom app bar for proceed to order 
+  Widget get bottomAppBar => BottomAppBar(
+    height: 50,
+    color: AppColor.primary,
+    child:  Center(child: Text('Proceed to Order', style: TextStyle(color: AppColor.white, fontSize: 16),)),
+);
+
 }

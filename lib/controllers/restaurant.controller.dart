@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fideos_mobile_app/models/restaurant.model.dart';
 import 'package:fideos_mobile_app/utils/flash.dart';
 import 'package:get/get.dart';
@@ -36,27 +34,31 @@ class RestaurantController extends GetxController {
     // Starting loader
     restaurantLoading.value = true;
 
+    // Creating new restaurant onject
+    final restaurant = Restaurant();
 
-    // Creating new restaurant onject 
-    final  restaurant = Restaurant();
-
-    // Fetching allRestaurat function from model 
+    // Fetching allRestaurat function from model
     final response = await restaurant.allRestaurant();
-   
-    if(response['error'] != null){
-        FlashMessage().show(response['error'].toString());
-    }
-    else if(response['success'] != null) {
-      // If success is not null == Assigning data inside restautants list 
+
+    if (response['error'] != null) {
+      FlashMessage().show(response['error'].toString());
+    } else
+    // if(response['success'] != null) {
+    //   // If success is not null == Assigning data inside restautants list
+    //   restaurants.assignAll(response['success']);
+
+    //   // Refreshing the list
+    //   restaurants.refresh();
+
+    //   // Showing flash message
+    //   FlashMessage().show('Restaurants fetched successfully');
+    // }
+
+    if (response['success'] != null) {
       restaurants.assignAll(response['success']);
-
-      // Refreshing the list 
       restaurants.refresh();
-
-      // Showing flash message 
       FlashMessage().show('Restaurants fetched successfully');
     }
-
     restaurantLoading.value = false;
   }
 }

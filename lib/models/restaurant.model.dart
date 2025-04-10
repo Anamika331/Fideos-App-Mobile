@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:fideos_mobile_app/services/api.services.dart';
@@ -84,29 +85,85 @@ class Restaurant {
     return data;
   }
 
+
   // Find all restaurant
-  allRestaurant() async {
-    try {
-      // Preparing endpoint
-      const endpoint = "/restaurants";
+  // allRestaurant() async {
+  //   try {
+  //     // Preparing endpoint
+  //     const endpoint = "/restaurants";
 
-      // Fetching response
-      final response = await APIClient().get(endpoint);
+  //     // Fetching response
+  //     final response = await APIClient().get(endpoint);
 
-      // separate restaurant from response
-      List<dynamic> restaurants = response.data['data'];
+  //     // separate restaurant from response
+  //     List<dynamic> restaurants = response.data['data'];
+     
+  //     log(response.data.toString());
+  //     // parse this list of foods from map to restaurant and return
+  //     return {
+  //       "success": restaurants
+  //           .map((restaurant) => Restaurant.fromJson(restaurant))
+  //           .toList()
+  //     };
+  //   } on DioException catch (e) {
+  //     return {'error': e.response!.data['error']};
+  //   }
+  // }
 
-      // parse this list of foods from map to restaurant and return
-      return {
-      
-        "success": restaurants
-            .map((restaurant) => Restaurant.fromJson(restaurant))
-            .toList()
-      };
-    } on DioException catch (e) {
-      return {'error': e.response!.data['error']};
+
+//  Future<Map<String, dynamic>> allRestaurant() async {
+//   try {
+//     const endpoint = "/restaurants";
+//     final response = await APIClient().get(endpoint);
+
+//     // This is already a List, not a Map
+//     List<dynamic> restaurants = response.data['data'];
+
+//     // Parse properly
+//     final parsed = restaurants
+//         .map((item) => Restaurant.fromJson(item as Map<String, dynamic>))
+//         .toList();
+
+//     return {
+//       "success": parsed,
+//     };
+//   } on DioException catch (e) {
+//     return {
+//       'error': e.response?.data['error'] ?? 'Unknown error',
+//     };
+//   }
+// }
+
+Future<Map<String, dynamic>> allRestaurant() async {
+  try {
+    const endpoint = "/restaurants";
+    final response = await APIClient().get(endpoint);
+
+    // Safely extract the list
+    final data = response.data;
+
+    log(data.toString());
+
+    if (data == null || data['data'] == null) {
+      return {'error': 'No data received from server'};
     }
+
+    final rawList = data['data'] as List<dynamic>;
+
+    final parsed = rawList
+        .map((item) => Restaurant.fromJson(item as Map<String, dynamic>))
+        .toList();
+
+    return {'success': parsed};
+  } on DioException catch (e) {
+    return {
+      'error': e.response?.data['error'] ?? 'Network error occurred',
+    };
   }
+}
+
+
+
 }
 
 class Location {
