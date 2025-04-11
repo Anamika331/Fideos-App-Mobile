@@ -59,40 +59,37 @@ class User {
   // User create/register
   register() async {
     try {
-        // Preparing body object
-      final body = {'name': name, 'email': email, 'password': password };
+      // Preparing body object
+      final body = {'name': name, 'email': email, 'password': password};
 
       // Preparing endpoint
       const endpoint = "/users/save";
 
       // Fetching response from api
-      final response = await APIClient().post(endpoint, data: body);
+      final response = await APIClient(endpoint).post(body);
 
-      // Returning response 
-      return {
-        'success': response.data['data']
-      };
+      // Returning response
+      return {'success': response!.data};
     } on DioException catch (e) {
       return {'error': e.response!.data['error']};
     }
   }
 
-  // User login 
+  // User login
   login() async {
     try {
-      // Preparing request body 
+      // Preparing request body
       final body = {'email': email, 'password': password};
 
       // Preparing endpoint
       const endpoint = "/users/login";
 
-      // Fetching response 
-      final response = await APIClient().post(endpoint, data: body);
+      // Fetching response
+      final response = await APIClient(endpoint).post(body);
 
-      return {'success': response.data['data']};
-      
+      return {'success': response!.data};
     } on DioException catch (e) {
-        return {'error': e.response!.data['error']};
+      return {'error': e.response!.data['error']};
     }
   }
 }
