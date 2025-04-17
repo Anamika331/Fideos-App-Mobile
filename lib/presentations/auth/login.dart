@@ -55,7 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Email text field
                     CommonTextFormField(
                             controller: _authController.loginEmailController,
-
                             validator: (email) {
                               if(email!.isEmpty){
                                 return 'Email is required';

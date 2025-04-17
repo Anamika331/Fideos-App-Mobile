@@ -87,15 +87,15 @@ class CartController extends GetxController {
 
     final user = await CookieManager('id').get();
 
+   
+
     final items = itemCounts.entries
         .where((item) => item.value > 0)
         .map((item) => Items(
-              food: food[item.key]["id"], // replace with correct property
+              food: food[item.key]["id"], 
               qty: item.value,
             ))
         .toList();
-
-    log(items.toString());
 
     final cart = Cart(user: user.toString(), items: items);
 
