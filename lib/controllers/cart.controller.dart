@@ -90,7 +90,7 @@ class CartController extends GetxController {
     final items = itemCounts.entries
         .where((item) => item.value > 0)
         .map((item) => Items(
-              food: food[item.key].id, // replace with correct property
+              food: food[item.key]["id"], // replace with correct property
               qty: item.value,
             ))
         .toList();
@@ -104,7 +104,9 @@ class CartController extends GetxController {
     if (response['error'] != null) {
       FlashMessage().show(response['error']);
     } else {
-      FlashMessage().show('Cart updated!');
+      FlashMessage().show('Cart Added!');
+      Get.to(() => const CartScreen());
+
     }
 
     addToCartLoader.value = false;
