@@ -1,5 +1,6 @@
 import 'package:fideos_mobile_app/controllers/cart.controller.dart';
 import 'package:fideos_mobile_app/models/color.model.dart';
+import 'package:fideos_mobile_app/utils/add_to_cart.dart';
 import 'package:fideos_mobile_app/utils/appbar.dart';
 import 'package:fideos_mobile_app/utils/spacer.dart';
 import 'package:flutter/material.dart';
@@ -226,7 +227,7 @@ class CartItemTile extends StatelessWidget {
                           // Adding some space
                           Space.show(width: 10),
     
-                          addToCartButton(),
+                          // addToCartButton(id: 1),
                         ],
                       ),
                     ),
@@ -238,20 +239,23 @@ class CartItemTile extends StatelessWidget {
       ],
     );
   }
+// add to cart button
+  Widget addToCartButton({required int id}) => Obx(() {
+        int count = _cartController.getCount(id);
 
-  // add to cart button
-  Widget addToCartButton({String? id}) => Column(
-        children: [
-          OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                  backgroundColor: AppColor.primary,
-                  fixedSize: const Size(100, 30),
-                  side: BorderSide(
-                      color: AppColor.primary.withOpacity(0.5), width: 1.5),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4))),
-              onPressed: () {},
-              child: Row(
+        return count == 0
+            ? Addtocartbutton(onpressed: () {
+                _cartController.incrementCount(id);
+              })
+            : OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    fixedSize: const Size(130, 30),
+                    side: BorderSide(
+                        color: AppColor.primary.withOpacity(0.5), width: 1.5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4))),
+                onPressed: () {},
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -260,24 +264,21 @@ class CartItemTile extends StatelessWidget {
                           _cartController.decrementCount(id);
                         },
                         child: const Icon(Icons.remove,
-                            size: 17, color: Colors.white)),
-                    Obx(() => Text(_cartController.count.toString(),
+                            size: 17, color: Colors.black)),
+                    Text(count.toString(),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 14))),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 14)),
                     InkWell(
                         onTap: () {
                           _cartController.incrementCount(id);
                         },
                         child: const Icon(Icons.add,
-                            size: 17, color: Colors.white))
-                  ])),
-          Text(
-            '\$500',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          )
-        ],
-      );
+                            size: 17, color: Colors.black))
+                  ],
+                ),
+              );
+      });
 }
 
 //

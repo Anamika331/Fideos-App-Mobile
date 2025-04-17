@@ -22,7 +22,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 
 class APIClient {
-  String baseURL = "https://fideos-gamma.vercel.app/api/v1";
+  String baseURL = "https://fideos-node.vercel.app/api/v1";
   String endpoint = "";
   Dio dio = Dio();
   APIClient(this.endpoint) {

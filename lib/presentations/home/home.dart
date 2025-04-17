@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fideos_mobile_app/controllers/base_screen.controller.dart';
 import 'package:fideos_mobile_app/controllers/restaurant.controller.dart';
 import 'package:fideos_mobile_app/models/color.model.dart';
@@ -22,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Import controller
   final _baseScreenController = Get.put(BaseScreenController());
 
-  final _restaurantController =  Get.put(RestaurantController());
+  final _restaurantController = Get.put(RestaurantController());
 
   @override
   void initState() {
@@ -30,84 +32,97 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _restaurantController.restaurants.refresh();
     _restaurantController.allRestaurants();
-    
   }
 
   @override
   Widget build(BuildContext context) {
+    return Column(children: [
+      //  Top Image
+      TopImage(),
 
-    return  Column(children: [
-          //  Top Image
-          TopImage(),
-    
+      // Adding some space
+      Space.show(height: 20),
+
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(children: [
+          // Search box
+          searchBox,
+
           // Adding some space
-          Space.show(height: 20),
-    
-          Padding(
-     padding: const EdgeInsets.all(10.0),
-     child: Column(children: [
-       // Search box
-       searchBox,
-    
-       // Adding some space
-       Space.show(height: 15),
-    
-       // Seperator
-       Seperator(text: 'All Restaurants Near You', horizontalPadding: 0)
-           .show(),
-    
-       // Adding some space
-       Space.show(height: 15),
-    
-       // Filter option
-       SizedBox(
-         height: 30,
-         child: ListView.separated(
-             scrollDirection: Axis.horizontal,
-             itemBuilder: (context, index) {
-               return Container(
-                 padding: const EdgeInsets.all(5),
-                 decoration: BoxDecoration(
-                     border: Border.all(color: Colors.black26),
-                     borderRadius: BorderRadius.circular(5)),
-                 child: Text(_baseScreenController.filterOption[index]),
-               );
-             },
-             separatorBuilder: (context, index) {
-               return Space.show(width: 5);
-             },
-             itemCount: _baseScreenController.filterOption.length),
-       ),
-    
-       // Adding some space
-       Space.show(height: 10),
-    
-       // Title
-       Text("197 restaurants delivering to you",
-           style: TextStyle(color: AppColor.black.withOpacity(0.3))),
-    
-       // Adding some space 
-       Space.show(height: 10),
-    
-       // Restaurant tile
-      Obx(() => _restaurantController.restaurantLoading.value ? Loader().show() : Column(children: [
-       ...List.generate(_restaurantController.restaurants.length, 
-        (index) => Text('jjhdjh')),
-      ],)),
+          Space.show(height: 15),
 
-        // ...List.generate(_restaurantController.restaurants.length, 
-        // (index) => Text('jjhdjh')),
-    
-       // Adding some space 
-       Space.show(height: 10),
+          // Seperator
+          Seperator(text: 'All Restaurants Near You', horizontalPadding: 0)
+              .show(),
 
+          // Adding some space
+          Space.show(height: 15),
 
-       
-    
-     ]),
-    )
-  ]);
-   
+          // Filter option
+          SizedBox(
+            height: 30,
+            child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black26),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Text(_baseScreenController.filterOption[index]),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Space.show(width: 5);
+                },
+                itemCount: _baseScreenController.filterOption.length),
+          ),
+
+          // Adding some space
+          Space.show(height: 10),
+
+          // Title
+          Text("197 restaurants delivering to you",
+              style: TextStyle(color: AppColor.black.withOpacity(0.3))),
+
+          // Adding some space
+          Space.show(height: 10),
+
+          // Restaurant tile
+          Obx(() => _restaurantController.restaurantLoading.value
+              ? Loader().show()
+              : Column(
+                  children: [
+                    ...List.generate(
+                        _restaurantController.restaurants.length,
+                        (index) => InkWell(
+                            onTap: () {
+                              _restaurantController.restaurantId.value = _restaurantController.restaurants[index].id.toString();
+
+                              log(_restaurantController.restaurantId.toString());
+
+                              Get.to(() => RestaurantDetail());
+                              
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: RestaurantTile(
+                                restaurant:
+                                    _restaurantController.restaurants[index],
+                              ),
+                            ))),
+                  ],
+                )),
+
+          // ...List.generate(_restaurantController.restaurants.length,
+          // (index) => Text('jjhdjh')),
+
+          // Adding some space
+          Space.show(height: 10),
+        ]),
+      )
+    ]);
   }
 
   // Search field
@@ -278,69 +293,90 @@ class TopImage extends StatelessWidget {
 
 // Restaurant Tile
 class RestaurantTile extends StatelessWidget {
-   RestaurantTile({super.key,  required this.restaurant});
+  RestaurantTile({super.key, required this.restaurant});
 
   Restaurant restaurant;
   @override
   Widget build(BuildContext context) {
-    return Text(restaurant.name.toString());
-    // Container(
-    //     width: Get.width,
-    //     decoration: BoxDecoration(
-    //         borderRadius: BorderRadius.circular(5),
-    //         border: Border.all(color: AppColor.black.withOpacity(0.2))),
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         // Image Container
-    //         Container(
-    //           height: 150,
-    //           width: Get.width,
-    //           decoration: const BoxDecoration(
-    //               borderRadius: BorderRadius.only(topLeft: Radius.circular(5),   topRight: Radius.circular(5)),
-    //               image: DecorationImage(image: AssetImage('assets/delicious-pizza.png'), fit: BoxFit.cover)),
-    //           child: Padding(
-    //             padding: const EdgeInsets.all(4),
-    //             child: Align(alignment: Alignment.topRight, child: Icon(Feather.heart, color: AppColor.white.withOpacity(0.7))),
-    //           ),
-    //         ),
-    
-    //         // Restaurant detail
-    //         Padding(
-    //           padding: const EdgeInsets.all(8.0),
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //                Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   const Text('Dominos Pizza', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)),
-    //                   Text('Pizza, Burger, Pasta and more', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
-    //                   Text('25 mins from your location', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
-    //                   Text('Saltlake Sector 3, Bidhannagar, Kolkata', style:  TextStyle(color: AppColor.black.withOpacity(0.3), fontSize: 12)),
-    //                 ],
-    //               ),
-    
-    //               // Rating Button
-    //               Container(
-    //                 padding: const EdgeInsets.all(5),
-    //                 decoration: BoxDecoration(
-    //                     color: AppColor.green, borderRadius: BorderRadius.circular(5)),
-    //                 child: const Row(
-    //                   children: [
-    //                     // Star icon
-    //                     Icon(Icons.star, color: Colors.white,size: 20),
-    //                     // Rating 
-    //                     Text(' 4.7+', style: TextStyle(color: Colors.white),),
-    //                   ],
-    //                 ),
-    //               )
-    //             ],
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    // );
+    return Container(
+      width: Get.width,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: AppColor.black.withOpacity(0.2))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image Container
+          Container(
+            height: 150,
+            width: Get.width,
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                image: DecorationImage(
+                    image: NetworkImage(restaurant.image.toString()),
+                    fit: BoxFit.cover)),
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Feather.heart,
+                      color: AppColor.white.withOpacity(0.7))),
+            ),
+          ),
+
+          // Restaurant detail
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(restaurant.name.toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 18)),
+                    Text('Pizza, Burger, Pasta and more',
+                        style: TextStyle(
+                            color: AppColor.black.withOpacity(0.3),
+                            fontSize: 12)),
+                    Text('25 mins from your location',
+                        style: TextStyle(
+                            color: AppColor.black.withOpacity(0.3),
+                            fontSize: 12)),
+                    Text(
+                        '${restaurant.location!.fullAddress} ${restaurant.location!.city}',
+                        style: TextStyle(
+                            color: AppColor.black.withOpacity(0.3),
+                            fontSize: 12)),
+                  ],
+                ),
+
+                // Rating Button
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: AppColor.green,
+                      borderRadius: BorderRadius.circular(5)),
+                  child:  Row(
+                    children: [
+                      // Star icon
+                      const Icon(Icons.star, color: Colors.white, size: 20),
+                      // Rating
+                      Text(
+                        restaurant.rating.toString(),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

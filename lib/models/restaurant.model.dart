@@ -85,36 +85,62 @@ class Restaurant {
     return data;
   }
 
-
   // Find all restaurant
-  allRestaurant() async {
+  Future<Map<String, dynamic>> allRestaurant() async {
     try {
-      // Preparing endpoint
       const endpoint = "/restaurants";
-
-      // Fetching response
       final response = await APIClient(endpoint).get();
 
-      // separate restaurant from response
-      List<dynamic> restaurants = response!.data;
-     
-      log(response.data.toString());
-      // parse this list of foods from map to restaurant and return
-      return {
-        "success": restaurants
-            .map((restaurant) => Restaurant.fromJson(restaurant))
-            .toList()
-      };
+      final data = response?.data;
+
+      // Safely get the list of restaurants from the 'success' key
+      if (data != null && data['data'] is List) {
+        final List<dynamic> restaurantList = data['data'];
+
+        return {
+          "success": restaurantList
+              .map((restaurant) => Restaurant.fromJson(restaurant))
+              .toList()
+        };
+      } else {
+        return {'error': 'Invalid response format'};
+      }
     } on DioException catch (e) {
-      return {'error': e.response!.data['error']};
+      return {'error': e.response?.data['error'] ?? 'Something went wrong'};
+    } catch (e) {
+      return {'error': 'Unexpected error: $e'};
     }
   }
 
+  // Restaurant detail
+  Future<Map<String, dynamic>> restaurantDetails(String restaurantId) async {
+    try {
+      final endpoint = "/restaurants/$restaurantId";
 
+      log(endpoint.toString());
+      final response = await APIClient(endpoint).get();
 
+      final data = response?.data;
 
+      // Safely get the list of restaurants from the 'success' key
+      if (data != null) {
+        final resturant = data['data'];
 
+        return {"success": resturant};
+      } else {
+        return {'error': 'Invalid response format'};
+      }
+    } on DioException catch (e) {
+      return {'error': e.response?.data['error'] ?? 'Something went wrong'};
+    } catch (e) {
+      return {'error': 'Unexpected error: $e'};
+    }
+  }
+
+ 
 }
+
+// Location
 
 class Location {
   String? fullAddress;
@@ -153,6 +179,7 @@ class Location {
   }
 }
 
+// Video
 class Videos {
   String? url;
   String? title;
@@ -194,6 +221,8 @@ class Videos {
   }
 }
 
+
+// Food 
 class Food {
   String? name;
   String? description;
@@ -243,6 +272,8 @@ class Food {
   }
 }
 
+
+// Food Category
 class FoodCategory {
   String? title;
   String? description;
@@ -274,4 +305,8 @@ class FoodCategory {
     data['updatedAt'] = updatedAt;
     return data;
   }
+
+  
 }
+
+
