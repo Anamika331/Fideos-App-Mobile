@@ -123,7 +123,7 @@ class Restaurant {
       final data = response?.data;
 
       // Safely get the list of restaurants from the 'success' key
-      if (data != null) {
+      if (data != null ) {
         final resturant = data['data'];
 
         return {"success": resturant};

@@ -87,7 +87,7 @@ class User {
       // Fetching response
       final response = await APIClient(endpoint).post(body);
 
-      return {'success': response!.data};
+      return {'success': response!.data["data"]};
     } on DioException catch (e) {
       return {'error': e.response!.data['error']};
     }

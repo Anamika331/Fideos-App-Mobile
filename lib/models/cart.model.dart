@@ -35,8 +35,8 @@ class Cart {
     return data;
   }
 
-  // Adding item  to cart
-  addToCart() async {
+  // // Adding item  to cart
+  addToCart({ required String restaurant}) async {
     try {
       // Preparing endpoint
     const endpoint = "/carts/save";
@@ -44,18 +44,49 @@ class Cart {
     // Preparing request body
     final body = {
       "user": user,
+      "restaurant": restaurant,
       "items": items!.map((item) => item.toJson()).toList(),
     };
 
-    // Fethcing response 
+    // Fethcing response
     final response = await APIClient(endpoint).post(body);
 
-    // returning response 
+    // returning response
     return{"success": response!.data};
     } on DioException catch (e) {
       return {"error": e.response!.data["error"]};
     }
   }
+
+  // Fetch all cart items 
+  Future<Map<String, dynamic>> allCartItems({required String userId}) async{
+    try {
+      // Preparting endoint
+      final endpoint  = "/carts/user/$userId";
+
+      // Fetching response 
+      final response = await APIClient(endpoint).get();
+        final data = response?.data;
+
+
+      // Safely get the list of restaurants from the 'success' key
+      if (data != null && data['data'] is List) {
+        final List<dynamic> carts = data['data'];
+
+        return {
+          "success": carts
+              .map((cart) => Cart.fromJson(cart))
+              .toList()
+        };
+      } else {
+        return {'error': 'Invalid response format'};
+      }
+     
+    } on DioException catch (e) {
+      return {"erorr": e.response!.data["error"]};
+    }
+  }
+  
 }
 
 class Items {
@@ -73,16 +104,16 @@ class Items {
     id = json['id'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (food != null) {
-      data['food'] = food!.toJson();
-    }
-    data['qty'] = qty;
-    data['_id'] = sId;
-    data['id'] = id;
-    return data;
+ Map<String, dynamic> toJson() {
+  final Map<String, dynamic> data = {};
+  if (food != null) {
+    data['food'] = food!.id; // Only the ID
   }
+  data['qty'] = qty;
+  data['_id'] = sId;
+  data['id'] = id;
+  return data;
+}
 }
 
 class Food {

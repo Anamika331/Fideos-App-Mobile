@@ -34,81 +34,76 @@ class CartController extends GetxController {
   RxBool addToCartLoader = false.obs;
 
   // Add item to cart
-  // addToCart({food}) async {
-  //   // Starting loader
-  //   addToCartLoader.value = true;
-
-  //   // final items = itemCounts.entries
-  //   //     .where((item) => item.value > 0)
-  //   //     .map((item) => {
-  //   //           "food": food[item.key],
-  //   //           "qty": item.value,
-  //   //         })
-  //   //     .toList();
-
-  //   // final user  = await  CookieManager('id').get();
-
-  //   // // Creating cart
-  //   // final Cart cart = Cart(
-  //   //   user: user.toString()
-  //   // );
-
-  //   // Convert itemCounts + food map to a List<Items>
-  //   final List<Items> items = itemCounts.entries
-  //       .where((entry) => entry.value > 0)
-  //       .map((entry) => Items(
-  //             food: food[entry.key], // get food ID from your map
-  //             qty: entry.value,
-  //           ))
-  //       .toList();
-
-  //   final user = await CookieManager('id').get();
-
-  //   final cart = Cart(user: user.toString(), items: items);
-
-  //   // Fetching response
-  //   final response = await cart.addToCart();
-
-  //   // Checking if any error
-  //   if (response['error'] != null) {
-  //     FlashMessage().show(response['error'].toString());
-  //   } else {
-  //     // Returning success message
-  //     FlashMessage().show('Register Successfully');
-  //     Get.to(() => const CartScreen());
-  //   }
-
-  //   // Stopping loader
-  //   addToCartLoader.value = false;
-  // }
-
-  Future<void> addToCart({required List<dynamic> food}) async {
+  Future<void> addToCart({required List<dynamic> food, required String restaurant}) async {
     addToCartLoader.value = true;
 
     final user = await CookieManager('id').get();
 
-   
-
+    log(user.toString());
     final items = itemCounts.entries
-        .where((item) => item.value > 0)
-        .map((item) => Items(
-              food: food[item.key]["id"], 
-              qty: item.value,
-            ))
-        .toList();
+      .where((item) => item.value > 0)
+      .map((item) => Items(
+            food: Food(id: food[item.key]),
+            qty: item.value,
+          ))
+      .toList();
+
 
     final cart = Cart(user: user.toString(), items: items);
 
-    final response = await cart.addToCart();
+    final response = await cart.addToCart(restaurant: restaurant);
+
+    log(response.toString());
 
     if (response['error'] != null) {
       FlashMessage().show(response['error']);
     } else {
       FlashMessage().show('Cart Added!');
       Get.to(() => const CartScreen());
-
     }
 
     addToCartLoader.value = false;
   }
+
+  // Cart Loader 
+  RxBool cartLoader = false.obs;
+  
+  RxList<Cart> carts = <Cart>[].obs;
+
+  // Fetch all cart items
+  allCartItems() async{
+    // Starting cart loader
+    cartLoader.value = true;
+
+    // Getting user id from cookie
+    final userId = await CookieManager('id').get();
+
+    // Creating Cart 
+    final cart = Cart();
+
+    // Fetching response 
+    final response  = await cart.allCartItems(userId: userId.toString());
+
+    log(response.toString());
+
+    // Cecking if response has error or not 
+    if(response["error"] != null) {
+      FlashMessage().show(response['error']);
+    }else if (response['success'] != null) {
+      // If response is success -- asigning to cart list
+      carts.assignAll(response['success']);
+
+      // Refreshing the list
+      carts.refresh();
+
+      // Showing flash message
+      FlashMessage().show('Restaurants fetched successfully');
+    }
+
+    // Stopping loader 
+    cartLoader.value =  false;
+  }
+
+
+
 }

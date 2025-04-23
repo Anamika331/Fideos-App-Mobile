@@ -70,13 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.black26),
                         borderRadius: BorderRadius.circular(5)),
-                    child: Text(_baseScreenController.filterOption[index]),
+                    child: Text(_restaurantController.menuItems[index].title.toString()),
                   );
                 },
                 separatorBuilder: (context, index) {
                   return Space.show(width: 5);
                 },
-                itemCount: _baseScreenController.filterOption.length),
+                itemCount: _restaurantController.menuItems.length),
           ),
 
           // Adding some space

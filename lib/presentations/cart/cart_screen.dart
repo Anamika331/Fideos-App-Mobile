@@ -7,9 +7,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  // Importing cart controller 
+  final _cartController  = Get.put(CartController());
+  @override
+  void initState() {
+    
+    super.initState();
+    _cartController.allCartItems();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +99,6 @@ class CartScreen extends StatelessWidget {
   }
 
   // Bill Summary
-
   Widget get billSummary => const Align(
         alignment: Alignment.centerLeft,
         child: Column(
@@ -133,11 +145,11 @@ class CartScreen extends StatelessWidget {
         ),
 );
 
-
-
   // Appbar
   Widget get appBar => CommonAppBar(
-        leading: const Icon(Feather.arrow_left),
+        leading: InkWell(onTap: () {
+          Get.back();
+        }, child: const Icon(Feather.arrow_left)),
         title: const Text("Your Cart from Domino's Pizza",
             style: TextStyle(fontSize: 20)),
         actions: Space.show(),
@@ -249,7 +261,7 @@ class CartItemTile extends StatelessWidget {
               })
             : OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                    fixedSize: const Size(130, 30),
+                    fixedSize: const Size(130, 50),
                     side: BorderSide(
                         color: AppColor.primary.withOpacity(0.5), width: 1.5),
                     shape: RoundedRectangleBorder(
@@ -264,7 +276,7 @@ class CartItemTile extends StatelessWidget {
                           _cartController.decrementCount(id);
                         },
                         child: const Icon(Icons.remove,
-                            size: 17, color: Colors.black)),
+                            size: 20, color: Colors.black)),
                     Text(count.toString(),
                         textAlign: TextAlign.center,
                         style:
@@ -274,7 +286,7 @@ class CartItemTile extends StatelessWidget {
                           _cartController.incrementCount(id);
                         },
                         child: const Icon(Icons.add,
-                            size: 17, color: Colors.black))
+                            size: 20, color: Colors.black))
                   ],
                 ),
               );

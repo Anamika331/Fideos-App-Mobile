@@ -1,13 +1,6 @@
 import 'package:fideos_mobile_app/models/color.model.dart';
-import 'package:fideos_mobile_app/presentations/address/address.dart';
-import 'package:fideos_mobile_app/presentations/address/edit_address.dart';
 import 'package:fideos_mobile_app/presentations/auth/login.dart';
-import 'package:fideos_mobile_app/presentations/auth/register.dart';
 import 'package:fideos_mobile_app/presentations/base_screen/dashboard.dart';
-import 'package:fideos_mobile_app/presentations/cart/cart_screen.dart';
-import 'package:fideos_mobile_app/presentations/home/home.dart';
-import 'package:fideos_mobile_app/presentations/restaurant/restaurant.detail.dart';
-import 'package:fideos_mobile_app/presentations/splash/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -85,10 +85,12 @@ class AuthController extends GetxController {
     // Logging in using user login function
     final response = await user.login();
 
+   
+
     if (response['error'] != null) {
       FlashMessage().show(response['error'].toString());
     } else if (response['success'] != null) {
-      // await CookieManager("id", value: response['success']['id']).save();
+      await CookieManager("id", value: response['success']['id']).save();
       // await CookieManager("user", value: response['success']).save();
       FlashMessage().show('Login Successfully');
 
