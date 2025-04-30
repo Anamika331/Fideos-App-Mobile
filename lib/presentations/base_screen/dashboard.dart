@@ -18,9 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: const BottomNavbar(),
-        body: SingleChildScrollView(
-            child: Center(
-                child: Obx(() => _baseScreenController
-                    .screens[_baseScreenController.selectedIndex.value]))));
+        body: Obx(() => _baseScreenController
+            .screens[_baseScreenController.selectedIndex.value]));
   }
 }

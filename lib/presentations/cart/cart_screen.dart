@@ -1,5 +1,8 @@
+import 'package:fideos_mobile_app/controllers/base_screen.controller.dart';
 import 'package:fideos_mobile_app/controllers/cart.controller.dart';
 import 'package:fideos_mobile_app/models/color.model.dart';
+import 'package:fideos_mobile_app/presentations/base_screen/dashboard.dart';
+import 'package:fideos_mobile_app/presentations/home/home.dart';
 import 'package:fideos_mobile_app/utils/add_to_cart.dart';
 import 'package:fideos_mobile_app/utils/appbar.dart';
 import 'package:fideos_mobile_app/utils/spacer.dart';
@@ -17,9 +20,9 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   // Importing cart controller 
   final _cartController  = Get.put(CartController());
+  final _baseScreenController = Get.put(BaseScreenController());
   @override
   void initState() {
-    
     super.initState();
     _cartController.allCartItems();
   }
@@ -95,7 +98,11 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
           ),
-        ));
+        )
+        
+  );
+
+
   }
 
   // Bill Summary
@@ -148,7 +155,10 @@ class _CartScreenState extends State<CartScreen> {
   // Appbar
   Widget get appBar => CommonAppBar(
         leading: InkWell(onTap: () {
-          Get.back();
+          setState(() {
+            _baseScreenController.selectedIndex.value = 0;
+            Get.to(() => const DashboardScreen());
+          });
         }, child: const Icon(Feather.arrow_left)),
         title: const Text("Your Cart from Domino's Pizza",
             style: TextStyle(fontSize: 20)),

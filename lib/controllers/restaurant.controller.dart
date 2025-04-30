@@ -41,7 +41,7 @@ class RestaurantController extends GetxController {
       restaurants.refresh();
 
       // Showing flash message
-      FlashMessage().show('Restaurants fetched successfully');
+      // FlashMessage().show('Restaurants fetched successfully');
     }
     restaurantLoading.value = false;
   }
@@ -68,7 +68,7 @@ class RestaurantController extends GetxController {
 
       await restaurantMenu(selectedRestaurant.value.id.toString());
       // restaurants.refresh();
-      FlashMessage().show('Restaurants fetched successfully');
+      // FlashMessage().show('Restaurants fetched successfully');
     }
     restaurantDetailLoading.value = false;
   }

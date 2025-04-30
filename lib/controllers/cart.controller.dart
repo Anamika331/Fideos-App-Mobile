@@ -84,7 +84,7 @@ class CartController extends GetxController {
     // Fetching response 
     final response  = await cart.allCartItems(userId: userId.toString());
 
-    log(response.toString());
+    log(response["success"].toString());
 
     // Cecking if response has error or not 
     if(response["error"] != null) {
@@ -97,7 +97,7 @@ class CartController extends GetxController {
       carts.refresh();
 
       // Showing flash message
-      FlashMessage().show('Restaurants fetched successfully');
+      // FlashMessage().show('Restaurants fetched successfully');
     }
 
     // Stopping loader 

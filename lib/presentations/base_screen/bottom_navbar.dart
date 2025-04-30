@@ -28,10 +28,10 @@ class _BottomNavbarState extends State<BottomNavbar> {
                     borderRadius: BorderRadius.circular(6),
                     color: AppColor.white),
                 child: Obx(() => BottomNavigationBar(
+                    currentIndex: controller.selectedIndex.value,
                     onTap: (index) {
                       controller.onchange(index: index);
                     },
-                    currentIndex: controller.selectedIndex.value,
                     backgroundColor: Colors.white,
                     type: BottomNavigationBarType.fixed,
                     showUnselectedLabels: true,

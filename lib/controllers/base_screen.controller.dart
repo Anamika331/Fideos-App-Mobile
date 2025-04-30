@@ -1,3 +1,4 @@
+import 'package:fideos_mobile_app/presentations/cart/cart_screen.dart';
 import 'package:fideos_mobile_app/presentations/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -25,13 +26,18 @@ class BaseScreenController extends GetxController {
     // const Icon(Feather.user),
   ];
 
-  void onchange({required int index}) => selectedIndex.value = index;
+  void onchange({required int index}) {
+    selectedIndex.value = index;
+    if(selectedIndex.value == 2){
+      Get.to(const CartScreen());
+    }
+  }
 
   // Screen Names
   List screenNames = ['Home', 'Video', 'Cart', 'Order'];
 
   // Screens
-  List screens = const [HomeScreen(), Text('Trending video'), Text('Cart'), Text('Order')];
+  List screens = const [HomeScreen(), Text('Video'), CartScreen(), Text('Order')];
 
   // Filter options 
   List filterOption =  ['Sort', 'Nearest', 'Rating 4.0+', 'Pure veg', 'Items'];

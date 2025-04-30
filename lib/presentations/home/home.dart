@@ -36,93 +36,95 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      //  Top Image
-      TopImage(),
-
-      // Adding some space
-      Space.show(height: 20),
-
-      Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(children: [
-          // Search box
-          searchBox,
-
-          // Adding some space
-          Space.show(height: 15),
-
-          // Seperator
-          Seperator(text: 'All Restaurants Near You', horizontalPadding: 0)
-              .show(),
-
-          // Adding some space
-          Space.show(height: 15),
-
-          // Filter option
-          SizedBox(
-            height: 30,
-            child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black26),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(_restaurantController.menuItems[index].title.toString()),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return Space.show(width: 5);
-                },
-                itemCount: _restaurantController.menuItems.length),
-          ),
-
-          // Adding some space
-          Space.show(height: 10),
-
-          // Title
-          Text("197 restaurants delivering to you",
-              style: TextStyle(color: AppColor.black.withOpacity(0.3))),
-
-          // Adding some space
-          Space.show(height: 10),
-
-          // Restaurant tile
-          Obx(() => _restaurantController.restaurantLoading.value
-              ? Loader().show()
-              : Column(
-                  children: [
-                    ...List.generate(
-                        _restaurantController.restaurants.length,
-                        (index) => InkWell(
-                            onTap: () {
-                              _restaurantController.restaurantId.value = _restaurantController.restaurants[index].id.toString();
-
-                              log(_restaurantController.restaurantId.toString());
-
-                              Get.to(() => RestaurantDetail());
-                              
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: RestaurantTile(
-                                restaurant:
-                                    _restaurantController.restaurants[index],
-                              ),
-                            ))),
-                  ],
-                )),
-
-          // ...List.generate(_restaurantController.restaurants.length,
-          // (index) => Text('jjhdjh')),
-
-          // Adding some space
-          Space.show(height: 10),
-        ]),
-      )
-    ]);
+    return SingleChildScrollView(
+      child: Column(children: [
+        //  Top Image
+        TopImage(),
+      
+        // Adding some space
+        Space.show(height: 20),
+      
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(children: [
+            // Search box
+            searchBox,
+      
+            // Adding some space
+            Space.show(height: 15),
+      
+            // Seperator
+            Seperator(text: 'All Restaurants Near You', horizontalPadding: 0)
+                .show(),
+      
+            // Adding some space
+            Space.show(height: 15),
+      
+            // Filter option
+            SizedBox(
+              height: 30,
+              child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black26),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Text(_restaurantController.menuItems[index].title.toString()),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Space.show(width: 5);
+                  },
+                  itemCount: _restaurantController.menuItems.length),
+            ),
+      
+            // Adding some space
+            Space.show(height: 10),
+      
+            // Title
+            Text("197 restaurants delivering to you",
+                style: TextStyle(color: AppColor.black.withOpacity(0.3))),
+      
+            // Adding some space
+            Space.show(height: 10),
+      
+            // Restaurant tile
+            Obx(() => _restaurantController.restaurantLoading.value
+                ? Loader().show()
+                : Column(
+                    children: [
+                      ...List.generate(
+                          _restaurantController.restaurants.length,
+                          (index) => InkWell(
+                              onTap: () {
+                                _restaurantController.restaurantId.value = _restaurantController.restaurants[index].id.toString();
+      
+                                log(_restaurantController.restaurantId.toString());
+      
+                                Get.to(() => RestaurantDetail());
+                                
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: RestaurantTile(
+                                  restaurant:
+                                      _restaurantController.restaurants[index],
+                                ),
+                              ))),
+                    ],
+                  )),
+      
+            // ...List.generate(_restaurantController.restaurants.length,
+            // (index) => Text('jjhdjh')),
+      
+            // Adding some space
+            Space.show(height: 10),
+          ]),
+        )
+      ]),
+    );
   }
 
   // Search field
